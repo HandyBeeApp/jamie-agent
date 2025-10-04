@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Basic evaluation of the travel concierge agent."""
-
 import pathlib
 
 import dotenv
-from google.adk.evaluation import AgentEvaluator
 import pytest
+from google.adk.evaluation.agent_evaluator import AgentEvaluator
+
+pytest_plugins = ("pytest_asyncio",)
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -27,31 +27,12 @@ def load_env():
 
 
 @pytest.mark.asyncio
-async def test_inspire():
+async def test_eval_full_conversation():
     """Test the agent's basic ability on a few examples."""
     await AgentEvaluator.evaluate(
-        "travel_concierge",
-        str(pathlib.Path(__file__).parent / "data/inspire.test.json"),
-        num_runs=4
+        agent_module="rag",
+        eval_dataset_file_path_or_dir=str(
+            pathlib.Path(__file__).parent / "data/conversation.test.json"
+        ),
+        num_runs=1,
     )
-
-
-@pytest.mark.asyncio
-async def test_pretrip():
-    """Test the agent's basic ability on a few examples."""
-    await AgentEvaluator.evaluate(
-        "travel_concierge",
-        str(pathlib.Path(__file__).parent / "data/pretrip.test.json"),
-        num_runs=4
-    )
-
-
-@pytest.mark.asyncio
-async def test_intrip():
-    """Test the agent's basic ability on a few examples."""
-    await AgentEvaluator.evaluate(
-        "travel_concierge",
-        str(pathlib.Path(__file__).parent / "data/intrip.test.json"),
-        num_runs=4
-    )
-    
